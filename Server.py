@@ -69,7 +69,6 @@ class FileServer:
                 return f.read()
         return f"File '{filename}' not found in directory '{dirname}'."
 
-    # Método para listar o conteúdo de um diretório específico
     def list_directory_contents(self, dirname):
         dirpath = os.path.join(self.base_dir, dirname)
         if not os.path.exists(dirpath):
