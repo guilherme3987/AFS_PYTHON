@@ -1,13 +1,20 @@
+# Importa o módulo os para manipulação do sistema de arquivos
 import os
+
+# Importa a biblioteca Pyro4 para execução de métodos remotos
 import Pyro4
 
+# Classe FileServer com seus métodos
 @Pyro4.expose
 class FileServer:
+
+    # Inicializa o servidor de arquivos com um diretório de armazenamento padrão
     def __init__(self, storage_dir="file_storage"):
         self.base_dir = storage_dir
         if not os.path.exists(self.base_dir):
             os.makedirs(self.base_dir)
 
+    # Método para criar um novo arquivo
     def create_file(self, filename, content):
         filepath = os.path.join(self.base_dir, filename)
         if os.path.exists(filepath):
@@ -16,6 +23,7 @@ class FileServer:
             f.write(content)
         return f"File '{filename}' created."
 
+    # Método para ler o conteúdo de um arquivo
     def read_file(self, filename):
         filepath = os.path.join(self.base_dir, filename)
         if os.path.exists(filepath):
@@ -23,9 +31,12 @@ class FileServer:
                 return f.read()
         return "File not found."
 
+    # Método para listar todos os arquivos no diretório base
     def list_files(self):
         return [name for name in os.listdir(self.base_dir) if os.path.isfile(os.path.join(self.base_dir, name))]
 
+
+    # Método para criar um novo diretório
     def create_directory(self, dirname):
         dirpath = os.path.join(self.base_dir, dirname)
         if not os.path.exists(dirpath):
@@ -33,9 +44,11 @@ class FileServer:
             return f"Directory '{dirname}' created."
         return f"Directory '{dirname}' already exists."
 
+    # Método para listar todos os diretórios no diretório base
     def list_directories(self):
         return [name for name in os.listdir(self.base_dir) if os.path.isdir(os.path.join(self.base_dir, name))]
 
+    # Método para criar um arquivo dentro de um diretório específico
     def create_file_in_directory(self, dirname, filename, content):
         dirpath = os.path.join(self.base_dir, dirname)
         if not os.path.exists(dirpath):
@@ -47,6 +60,7 @@ class FileServer:
             f.write(content)
         return f"File '{filename}' created in directory '{dirname}'."
 
+    # Método para ler o conteúdo de um arquivo dentro de um diretório 
     def read_file_in_directory(self, dirname, filename):
         dirpath = os.path.join(self.base_dir, dirname)
         filepath = os.path.join(dirpath, filename)
@@ -55,6 +69,7 @@ class FileServer:
                 return f.read()
         return f"File '{filename}' not found in directory '{dirname}'."
 
+    # Método para listar o conteúdo de um diretório específico
     def list_directory_contents(self, dirname):
         dirpath = os.path.join(self.base_dir, dirname)
         if not os.path.exists(dirpath):
